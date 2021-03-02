@@ -17,47 +17,47 @@ class TestAndroid(object):
 
     @classmethod
     def setup_class(cls):
-        print('setup class')
-        # 3.6中用法
-        # 初始化，只执行一次，即第一次执行，完成所有加载
-        # cls.driver = cls.init_appium()
+        print('setup class 当前类下的所有用例执行之前执行一次')
+        cls.driver = cls.install_app()
 
     def setup_method(self):
-        print('setup method')
-        # 每次都执行，接下来每次执行都保留状态
-        TestAndroid.driver = self.restart_appium()
+        print('setup method 在每个测试用例执行之前执行一次')
+        TestAndroid.driver = self.restart_app()
+        # 获取启动的appium的driver实例，用于后续每个case的driver
         self.driver = TestAndroid.driver
 
+    # 测试用例1：进入登录页面
     def test_login(self):
-        el2 = TestAndroid.driver.find_element_by_xpath(
+        el2 = self.driver.find_element_by_xpath(
             "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout[2]/android.widget.ImageView")
         el2.click()
         time.sleep(3)
         # 密码登录
-        el3 = TestAndroid.driver.find_element_by_id("login_password")
+        el3 = self.driver.find_element_by_id("login_password")
         el3.click()
         time.sleep(2)
         # 返回
-        el4 = TestAndroid.driver.find_element_by_id("backImageView")
+        el4 = self.driver.find_element_by_id("backImageView")
         el4.click()
         time.sleep(2)
         # 返回
-        el5 = TestAndroid.driver.find_element_by_id("backImageView")
+        el5 = self.driver.find_element_by_id("backImageView")
         el5.click()
 
         # 断言
 
-
+    # 测试用例2：进入搜索页面
     def test_search(self):
         # 定位到搜索框，点击
-        TestAndroid.driver.find_element_by_xpath("//*[contains(@resource-id,'search_ll')]//*[@text='乘风破浪的姐姐2']").click()
+        self.driver.find_element_by_xpath("//*[contains(@resource-id,'search_ll')]//*[@text='乘风破浪的姐姐2']").click()
 
-    # 滑动
-    # def test_swipe(self):
-    #     for i in range(5):
-    #         self.driver.swipe(1000, 1000, 200, 200)
-    #         time.sleep(2)
+    # 测试用例3：使用swipe滑动
+    def test_swipe(self):
+        for i in range(5):
+            self.driver.swipe(1000, 1000, 200, 200)
+            time.sleep(2)
 
+    # 测试用例4：使用TouchAction滑动
     def test_action(self):
         # self.driver.find_element_by_xpath("//*[contains(@resource-id,'search_ll')]//*[@text='乘风破浪的姐姐2']")
         action = TouchAction(self.driver)
@@ -83,17 +83,20 @@ class TestAndroid(object):
 
     # 每次都执行，case完成，退出
     def teardown_method(self):
-        TestAndroid.driver.quit()
+        self.driver.quit()
 
     @classmethod
     # 返回的是什么，3.6中用法
-    def init_appium(cls):
+    def install_app(cls):
         # 类级别变量
         caps = {}
+        # 如果有必要，进行第一次安装
+        # caps["app"] = ""
         caps["platformName"] = "Android"
         caps["deviceName"] = "demo"
         caps["appActivity"] = "com.czy.hiconmultiscreen.mvp.ui.splash.SplashActivity"
         caps["appPackage"] = "com.czy.hiconmultiscreen"
+        # 解决第一次启动权限问题
         caps["autoGrantPermissions"] = "true"
         caps["ensureWebviewsHavePages"] = True
         # 不重置app信息
@@ -105,16 +108,15 @@ class TestAndroid(object):
         return driver
 
     @classmethod
-    def restart_appium(cls):
+    def restart_app(cls):
         # 类级别变量
         caps = {}
         caps["platformName"] = "Android"
         caps["deviceName"] = "demo"
         caps["appActivity"] = "com.czy.hiconmultiscreen.mvp.ui.splash.SplashActivity"
         caps["appPackage"] = "com.czy.hiconmultiscreen"
-        # caps["autoGrantPermissions"] = "true"
         caps["ensureWebviewsHavePages"] = True
-        # 不重置app信息
+        # 为了更快的启动，并保留之前的数据，从而可以保存在上个case的数据
         caps['noReset'] = True
 
         # 初始化实例，调用导入库的方法
