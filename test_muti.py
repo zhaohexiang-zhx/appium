@@ -83,6 +83,7 @@ class TestAndroid(object):
 
     # 每次都执行，case完成，退出
     def teardown_method(self):
+        # 不加也没有关系，如果不quit，启动appium会自动quit之前的session
         self.driver.quit()
 
     @classmethod
