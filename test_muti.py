@@ -2,22 +2,19 @@
 # pip install Appium-Python-Client
 # Then you can paste this into a file and simply run with Python
 
-# 导入库
-import pytest
-from appium import webdriver
 import time
 
+# 导入库
+from appium import webdriver
 from appium.webdriver.common.touch_action import TouchAction
-from appium.webdriver.webdriver import WebDriver
 
 
 class TestAndroid(object):
-    # 指定driver类型，后面可以调用webdriver中的方法
-    driver = WebDriver
 
     @classmethod
     def setup_class(cls):
         print('setup class 当前类下的所有用例执行之前执行一次')
+        # 当前没有被调用到
         cls.driver = cls.install_app()
 
     def setup_method(self):
