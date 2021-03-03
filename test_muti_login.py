@@ -28,13 +28,11 @@ class TestAndroid(object):
         el2.click()
         time.sleep(2)
 
-    # 测试用例1：进入登录页面
     def test_login_password(self):
         # 密码登录
         el3 = self.driver.find_element_by_id("login_password")
         el3.click()
         time.sleep(2)
-        # 断言
 
     def test_login_findPassword(self):
         # 密码登录
@@ -45,8 +43,14 @@ class TestAndroid(object):
         el3 = self.driver.find_element_by_id("findPassword")
         el3.click()
         time.sleep(2)
+        # 返回
+        el4 = self.driver.find_element_by_id("backImageView")
+        el4.click()
 
-    # 测试用例2：进入搜索页面
+    def teardown_method(self):
+        # 每个测试用例执行完，返回上一页
+        self.driver.back()
+
 
     @classmethod
     def install_app(cls):

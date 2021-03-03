@@ -74,9 +74,8 @@ class TestAndroid(object):
             # action.press(x=size['width'] * 0.8, y=size['height'] * 0.8).move_to(x=size['width'] * 0.2, y=size[
             action.long_press(x=size['width']*0.8, y=size['height']*0.8).move_to(x=size['width']*0.2, y=size['height']*0.2).release().perform()
             time.sleep(2)
+            self.driver.get_screenshot_as_file(str(i)+".png")
 
-    def test_window_size(self):
-        print(self.driver.get_window_size())
 
     # 每次都执行，case完成，退出
     def teardown_method(self):
